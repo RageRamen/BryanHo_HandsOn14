@@ -1,16 +1,35 @@
-# This is a sample Python script.
+from collections import defaultdict
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+class Graph:
+    def __init__(self, vertices):
+        self.graph = defaultdict(list)
+        self.V = vertices
 
+    def add_edge(self, u, v):
+        self.graph[u].append(v)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+    def topological_sort_util(self, v, visited, stack):
+        visited[v] = True
+        for i in self.graph[v]:
+            if not visited[i]:
+                self.topological_sort_util(i, visited, stack)
+        stack.append(v)
 
+    def topological_sort(self):
+        visited = [False] * self.V
+        stack = []
+        for i in range(self.V):
+            if not visited[i]:
+                self.topological_sort_util(i, visited, stack)
+        return stack[::-1]
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# Example usage:
+g = Graph(6)
+g.add_edge(1, 2)
+g.add_edge(3, 4)
+g.add_edge(4, 5)
+g.add_edge(1, 3)
+g.add_edge(1, 4)
+g.add_edge(3, 5)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+print("Topological Sort:", g.topological_sort())
